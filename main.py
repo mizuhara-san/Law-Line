@@ -1,7 +1,9 @@
 import json
 import os
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
+import secrets
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 import google.generativeai as genai
@@ -11,38 +13,66 @@ load_dotenv()
 api_key = os.getenv("GEMINI_API_KEY")
 
 if not api_key:
-    raise ValueError("No API Key found! Check your .env file.")
+    print("❌ ERROR: No API Key found in .env file!")
 
 genai.configure(api_key=api_key)
 model = genai.GenerativeModel('gemini-2.5-flash')
 
 app = FastAPI()
 
-# 2. Allow Frontend to talk to Backend (CORS)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# 2. Serve HTML Files (The "Pages")
+# Ensure the 'static' folder exists before mounting
+if os.path.isdir("static"):
+    app.mount("/static", StaticFiles(directory="static"), name="static")
+else:
+    print("⚠️ WARNING: 'static' folder not found. Please create it and move html files there.")
 
-# 3. Load Legal Data
-with open("data/legal_data.json", "r") as f:
-    LEGAL_DATA = json.load(f)
+@app.get("/")
+def read_root():
+    return FileResponse('static/login.html')
 
-# 4. Define Input Format
-# ... (Keep your imports and setup at the top)
+@app.get("/app")
+def read_app():
+    return FileResponse('static/app.html')
 
+@app.get("/about")
+def read_about():
+    if os.path.exists('static/about.html'):
+        return FileResponse('static/about.html')
+    return {"message": "About page coming soon"}
+
+# 3. Load Data
+try:
+    with open("data/legal_data.json", "r") as f:
+        LEGAL_DATA = json.load(f)
+except FileNotFoundError:
+    print("❌ ERROR: data/legal_data.json not found!")
+    LEGAL_DATA = {}
+
+# 4. Security Logic
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+@app.post("/api/login")
+def login(creds: LoginRequest):
+    # Hardcoded user for demo
+    if creds.username == "admin" and creds.password == "lawline2026":
+        token = secrets.token_hex(16)
+        return {"status": "success", "token": token, "user": "Administrator"}
+    else:
+        return JSONResponse(status_code=401, content={"status": "error", "message": "Invalid Credentials"})
+
+# 5. The AI Brain (Restored!)
 class UserQuery(BaseModel):
     text: str
-    language: str = "English"  # <--- Added Language Support
+    language: str = "English"
 
 @app.post("/analyze")
 async def analyze_legal_issue(query: UserQuery):
-    print(f"Received query: {query.text} in {query.language}")
+    print(f"🔍 ANALYZING: {query.text}")
     
-    # 1. Identify Category (Same as before)
+    # A. Identify Category
     available_keys = list(LEGAL_DATA.keys())
     prompt = f"""
     You are a legal dispatcher. Query: "{query.text}"
@@ -50,48 +80,46 @@ async def analyze_legal_issue(query: UserQuery):
     If unrelated, return 'irrelevant'. If related but not in list, return 'unknown'.
     Output ONLY the key string.
     """
+    
     try:
         response = model.generate_content(prompt)
         category_key = response.text.strip().replace('"', '').replace("'", "")
+        print(f"🤖 AI DECISION: {category_key}")
+        
+        # B. Handle Logic
+        if category_key in LEGAL_DATA:
+            result = LEGAL_DATA[category_key]
+            
+            # Draft Formal Letter
+            draft_prompt = f"""
+            Act as a professional lawyer.
+            User Situation: "{query.text}"
+            Legal Ground: "{result['act']}"
+            Task: Write a formal 'Legal Notice' or 'Complaint Letter'.
+            - Use placeholders like [Date], [Name].
+            - Language: {query.language}.
+            """
+            draft_letter = model.generate_content(draft_prompt).text
+            
+            # Simple Steps
+            steps_prompt = f"Explain these steps in simple {query.language} as a bulleted list: {result['procedure']}"
+            simple_steps = model.generate_content(steps_prompt).text
+
+            return {
+                "status": "success",
+                "category": result["title"],
+                "act": result["act"],
+                "simple_explanation": simple_steps,
+                "draft_letter": draft_letter,
+                "source": result["source"]
+            }
+
+        elif category_key == "irrelevant":
+            return {"status": "error", "message": "I can only help with legal problems. Please describe the incident."}
+        
+        else:
+            return {"status": "error", "message": "This is a valid legal issue, but my database is still learning it. Please consult a lawyer."}
+
     except Exception as e:
-        return {"error": str(e)}
-
-    # 2. Generate Logic + DRAFTING
-    if category_key in LEGAL_DATA:
-        result = LEGAL_DATA[category_key]
-        
-        # New: Ask Gemini to write a formal letter
-        draft_prompt = f"""
-        Act as a professional lawyer.
-        User Situation: "{query.text}"
-        Legal Ground: "{result['act']}"
-        
-        Task: Write a formal "Complaint Letter" or "Legal Notice" that the user can send to the authority/offender.
-        - Keep it strict and formal.
-        - Use placeholders like [Date], [My Name] for details the user needs to fill.
-        - Language: {query.language}
-        """
-        draft_letter = model.generate_content(draft_prompt).text
-
-        # New: Translate the explanation if needed
-        explainer_prompt = f"Explain {result['procedure']} in simple {query.language}. Keep it as a numbered list."
-        translated_steps = model.generate_content(explainer_prompt).text
-        
-        return {
-            "status": "success",
-            "category": result["title"],
-            "act": result["act"],
-            "simple_explanation": translated_steps, # Now AI generated & translated
-            "draft_letter": draft_letter,           # <--- THE KEY DIFFERENTIATOR
-            "source": result["source"]
-        }
-    
-    # ... (Keep your error handling 'elif' blocks same as before)
-    elif category_key == "irrelevant":
-         return {"status": "error", "message": "Please describe a legal problem."}
-    else:
-         return {"status": "partial", "message": "This is a valid legal issue, but our database is still growing. Please consult a lawyer."}
-
-@app.get("/")
-def home():
-    return {"message": "Law Line API is Running!"}
+        print(f"💥 CRASH: {str(e)}")
+        return {"status": "error", "message": f"Server Error: {str(e)}"}
