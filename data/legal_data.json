@@ -1,0 +1,121 @@
+{
+  "cyber_stalking": {
+    "title": "Cyber Stalking & Online Harassment",
+    "act": "Section 354D of IPC & Section 67 of IT Act",
+    "punishment": "Up to 3 years imprisonment + fine",
+    "procedure": [
+      "Step 1: Do NOT delete the messages. Take screenshots.",
+      "Step 2: Save the URL of the harasser's profile.",
+      "Step 3: File a complaint at cybercrime.gov.in (National Cyber Crime Portal).",
+      "Step 4: Visit your nearest police station to file an FIR."
+    ],
+    "source": "https://cybercrime.gov.in"
+  },
+  "cheque_bounce": {
+    "title": "Dishonour of Cheque (Cheque Bounce)",
+    "act": "Section 138 of Negotiable Instruments Act",
+    "punishment": "Imprisonment up to 2 years or fine up to twice the cheque amount",
+    "procedure": [
+      "Step 1: Bank returns the cheque with a 'memo' stating insufficient funds.",
+      "Step 2: Send a legal notice to the payer within 30 days of receiving the memo.",
+      "Step 3: Give them 15 days to pay.",
+      "Step 4: If unpaid, file a complaint in the Magistrate court within 30 days."
+    ],
+    "source": "Negotiable Instruments Act, 1881"
+  },
+  "rent_dispute": {
+    "title": "Tenant & Landlord Dispute",
+    "act": "Model Tenancy Act / State Rent Control Act",
+    "punishment": "Varies by state (Civil Dispute)",
+    "procedure": [
+      "Step 1: Check your Rent Agreement for the notice period clause.",
+      "Step 2: Landlords cannot evict without valid notice.",
+      "Step 3: Tenants cannot stop paying rent even during disputes.",
+      "Step 4: File a petition with the Rent Control Authority (Not Civil Court)."
+    ],
+    "source": "Department of Justice, India"
+  },
+  "consumer_complaint": {
+    "title": "Defective Product / Service",
+    "act": "Consumer Protection Act, 2019",
+    "punishment": "Compensation & Refund",
+    "procedure": [
+      "Step 1: Send a written complaint to the company/seller.",
+      "Step 2: If no response, call National Consumer Helpline (1915).",
+      "Step 3: File a case online at e-daakhil.nic.in.",
+      "Step 4: No lawyer is required to appear in Consumer Court."
+    ],
+    "source": "Consumer Affairs Dept"
+  },
+  "fir_refusal": {
+    "title": "Police Refusing to Register FIR",
+    "act": "Section 154 of CrPC (now BNSS)",
+    "punishment": "Disciplinary action against the officer",
+    "procedure": [
+      "Step 1: Send the complaint by Registered Post to the Superintendent of Police (SP).",
+      "Step 2: If still no action, file a 'Protest Petition' in the Magistrate Court.",
+      "Step 3: The Magistrate can order the police to register the FIR."
+    ],
+    "source": "Supreme Court Lalita Kumari vs Govt of UP"
+  },
+  "posh_harassment": {
+    "title": "Sexual Harassment at Workplace (POSH)",
+    "act": "POSH Act, 2013",
+    "punishment": "Termination of the harasser + Compensation to victim",
+    "procedure": [
+      "Step 1: Do NOT suffer in silence. Keep a record of incidents.",
+      "Step 2: Submit a written complaint to the Internal Complaints Committee (ICC) within 3 months.",
+      "Step 3: If the company has no ICC (less than 10 employees), complain to the Local Complaints Committee (LCC) at the District Collector's office.",
+      "Step 4: You can request a transfer or leave during the inquiry."
+    ],
+    "source": "Ministry of Women & Child Development"
+  },
+  "traffic_challan": {
+    "title": "Wrongful Traffic Challan / Harassment",
+    "act": "Motor Vehicles (Amendment) Act, 2019",
+    "punishment": "Penalty for Traffic Police Officer (Double the fine amount)",
+    "procedure": [
+      "Step 1: Never bribe. Ask for the official receipt/challan.",
+      "Step 2: If the officer harasses you, record a video (it is legal).",
+      "Step 3: You can challenge the fine online at the 'Virtual Court' (vcourts.gov.in).",
+      "Step 4: Email the complaint to the Traffic Commissioner with proof."
+    ],
+    "source": "Ministry of Road Transport & Highways"
+  },
+  "ragging_complaint": {
+    "title": "Ragging in College/University",
+    "act": "UGC Regulations on Curbing Ragging, 2009",
+    "punishment": "Suspension, Rustication, or Imprisonment up to 2 years",
+    "procedure": [
+      "Step 1: Call the National Anti-Ragging Helpline: 1800-180-5522 (24x7).",
+      "Step 2: File an anonymous complaint at antiragging.in.",
+      "Step 3: The Head of Institution MUST file an FIR within 24 hours of the complaint.",
+      "Step 4: Failure to act makes the college liable for penalty."
+    ],
+    "source": "University Grants Commission (UGC)"
+  },
+  "upi_fraud": {
+    "title": "Online Financial Fraud (UPI/Bank Scam)",
+    "act": "IT Act, 2000 & RBI Guidelines",
+    "punishment": "Imprisonment up to 3 years + Fine",
+    "procedure": [
+      "Step 1: IMMEDIATELY call 1930 (National Cyber Crime Helpline).",
+      "Step 2: This triggers a 'Debit Freeze' on the scammer's account.",
+      "Step 3: File a formal complaint at cybercrime.gov.in within 24 hours.",
+      "Step 4: Contact your bank for a 'Chargeback' request."
+    ],
+    "source": "National Cyber Crime Reporting Portal"
+  },
+  "domestic_violence": {
+    "title": "Domestic Violence",
+    "act": "Protection of Women from Domestic Violence Act, 2005",
+    "punishment": "Protection Order + Residence Order + Maintenance",
+    "procedure": [
+      "Step 1: Call 1091 (Women Helpline) or Police (112).",
+      "Step 2: Contact a 'Protection Officer' (PO) in your district (they file the legal report for free).",
+      "Step 3: You have the 'Right to Residence' (cannot be thrown out of the shared house).",
+      "Step 4: File a DIR (Domestic Incident Report) via the Magistrate."
+    ],
+    "source": "Ministry of Women & Child Development"
+  }
+}
